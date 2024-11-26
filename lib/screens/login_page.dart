@@ -121,6 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue[800],
+                      ),
                       onPressed: () {
                         Navigator.pushNamed(context, '/forgot-password');
                       },
@@ -138,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[800],
                         padding: const EdgeInsets.symmetric(vertical: 16),
+                        foregroundColor: Colors.white,
                       ),
                       child: const Text('Login'),
                     ),
@@ -151,6 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const Text("Don't have an account? "),
                       TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue[800],
+                        ),
                         onPressed: () {
                           Navigator.pushNamed(context, '/signup');
                         },
