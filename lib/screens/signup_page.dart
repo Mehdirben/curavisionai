@@ -121,6 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ElevatedButton(
                 onPressed: _signup,
                 style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
                   backgroundColor: Colors.blue[800],
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),

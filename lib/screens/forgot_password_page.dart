@@ -76,8 +76,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ElevatedButton(
                 onPressed: _resetPassword,
                 style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
                   backgroundColor: Colors.blue[800],
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  minimumSize: const Size(180, 50),
                 ),
                 child: const Text('Send Reset Link'),
               ),
