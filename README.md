@@ -1,4 +1,4 @@
-aya # curavisionai
+# curavisionai
 
 A new Flutter project.
 
