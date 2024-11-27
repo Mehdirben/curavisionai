@@ -140,38 +140,35 @@ class AccountPage extends StatelessWidget {
             buildMenuBox(
               title: 'Personal Information',
               icon: Icons.person,
-              onTap: () {},
-              onPressed: () {
-                Navigator.pushNamed(context, '/forgot-password');
-              },
+              onTap: () {}, onPressed: () {  },
             ),
 
             // Bank & Cards Box
             buildMenuBox(
               title: 'Bank & Cards',
               icon: Icons.account_balance_wallet,
-              onTap: () {},
+              onTap: () {}, onPressed: () {  },
             ),
 
             // Transaction Box
             buildMenuBox(
               title: 'Transaction',
               icon: Icons.receipt_long,
-              onTap: () {},
+              onTap: () {}, onPressed: () {  },
             ),
 
             // Settings Box
             buildMenuBox(
               title: 'Settings',
               icon: Icons.settings,
-              onTap: () {},
+              onTap: () {}, onPressed: () {  },
             ),
 
             // Data Privacy Box
             buildMenuBox(
               title: 'Data Privacy',
               icon: Icons.privacy_tip,
-              onTap: () {},
+              onTap: () {}, onPressed: () {  },
             ),
 
             const SizedBox(height: 20),
