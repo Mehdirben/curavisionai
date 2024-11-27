@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'ViewReportsPage.dart';
 
 class XRayPage extends StatelessWidget {
   const XRayPage({super.key});
@@ -105,9 +106,11 @@ class XRayPage extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 8.0), // Add vertical spacing
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // TODO: Add functionality to view reports
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('View Previous Reports clicked')),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ViewReportsPage(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
