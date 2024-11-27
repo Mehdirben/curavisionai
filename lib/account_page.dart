@@ -141,6 +141,9 @@ class AccountPage extends StatelessWidget {
               title: 'Personal Information',
               icon: Icons.person,
               onTap: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/forgot-password');
+              },
             ),
 
             // Bank & Cards Box
@@ -181,7 +184,7 @@ class AccountPage extends StatelessWidget {
   Widget buildMenuBox({
     required String title,
     required IconData icon,
-    required VoidCallback onTap,
+    required VoidCallback onTap, required Null Function() onPressed,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
