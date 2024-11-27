@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
-  // Définition des couleurs personnalisées
   static const Color primaryBlue = Color(0xFF2196F3);
   static const Color lightBlue = Color(0xFFE3F2FD);
   static const Color backgroundWhite = Color(0xFFF5F5F5);
@@ -25,7 +24,7 @@ class AccountPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // En-tête du profil avec fond bleu clair
+            // En-tête du profil
             Container(
               padding: const EdgeInsets.all(20.0),
               decoration: const BoxDecoration(
@@ -90,7 +89,8 @@ class AccountPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Section des paramètres
+
+            // Dark Mode Container
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
@@ -105,65 +105,70 @@ class AccountPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                children: [
-                  // Dark Mode Toggle
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: const [
-                            Icon(Icons.dark_mode, color: primaryBlue),
-                            SizedBox(width: 12),
-                            Text(
-                              'Dark Mode',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Switch(
-                          value: false,
-                          onChanged: (bool value) {},
-                          activeColor: primaryBlue,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(Icons.dark_mode, color: primaryBlue),
+                        SizedBox(width: 12),
+                        Text(
+                          'Dark Mode',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  const Divider(height: 1),
-                  // Menu Items
-                  buildMenuItem(
-                    icon: Icons.person,
-                    text: 'Personal Info',
-                    onTap: () {},
-                  ),
-                  buildMenuItem(
-                    icon: Icons.account_balance_wallet,
-                    text: 'Bank & Cards',
-                    onTap: () {},
-                  ),
-                  buildMenuItem(
-                    icon: Icons.receipt_long,
-                    text: 'Transaction',
-                    onTap: () {},
-                  ),
-                  buildMenuItem(
-                    icon: Icons.settings,
-                    text: 'Settings',
-                    onTap: () {},
-                  ),
-                  buildMenuItem(
-                    icon: Icons.privacy_tip,
-                    text: 'Data Privacy',
-                    onTap: () {},
-                  ),
-                ],
+                    Switch(
+                      value: false,
+                      onChanged: (bool value) {},
+                      activeColor: primaryBlue,
+                    ),
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 16),
+
+            // Personal Info Box
+            buildMenuBox(
+              title: 'Personal Information',
+              icon: Icons.person,
+              onTap: () {},
+            ),
+
+            // Bank & Cards Box
+            buildMenuBox(
+              title: 'Bank & Cards',
+              icon: Icons.account_balance_wallet,
+              onTap: () {},
+            ),
+
+            // Transaction Box
+            buildMenuBox(
+              title: 'Transaction',
+              icon: Icons.receipt_long,
+              onTap: () {},
+            ),
+
+            // Settings Box
+            buildMenuBox(
+              title: 'Settings',
+              icon: Icons.settings,
+              onTap: () {},
+            ),
+
+            // Data Privacy Box
+            buildMenuBox(
+              title: 'Data Privacy',
+              icon: Icons.privacy_tip,
+              onTap: () {},
+            ),
+
             const SizedBox(height: 20),
           ],
         ),
@@ -171,27 +176,62 @@ class AccountPage extends StatelessWidget {
     );
   }
 
-  Widget buildMenuItem({
+  Widget buildMenuBox({
+    required String title,
     required IconData icon,
-    required String text,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      leading: Icon(icon, color: primaryBlue),
-      title: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: lightBlue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: primaryBlue),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: primaryBlue,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        size: 16,
-        color: primaryBlue,
-      ),
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
     );
   }
 }
