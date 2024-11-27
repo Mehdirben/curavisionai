@@ -8,9 +8,16 @@ class AccountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white, // Change to white
+        ),
         title: Text(
           'Account Information',
-          style: GoogleFonts.lato(),
+            style: GoogleFonts.raleway(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            )
         ),
         centerTitle: true,
         backgroundColor: Colors.orange[800], // Orange color for the Account page
