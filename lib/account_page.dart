@@ -55,7 +55,7 @@ class AccountPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          'Mehedi Hasan',
+                          'Mehdi Rtel',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -64,7 +64,7 @@ class AccountPage extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'helloyouthmind@gmail.com',
+                          'curravision@gmail.com',
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -72,7 +72,7 @@ class AccountPage extends StatelessWidget {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          '+8801995867406',
+                          '+212000000',
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -125,8 +125,10 @@ class AccountPage extends StatelessWidget {
                     ),
                     Switch(
                       value: false,
+
                       onChanged: (bool value) {},
                       activeColor: primaryBlue,
+                      trackColor: MaterialStateProperty.all(lightBlue),
                     ),
                   ],
                 ),
