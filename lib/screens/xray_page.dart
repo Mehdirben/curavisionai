@@ -72,55 +72,59 @@ class XRayPage extends StatelessWidget {
             child: Column(
               children: [
                 // Upload X-Ray Button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO: Add functionality to upload X-Ray
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Upload X-Ray clicked')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[700],
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8.0), // Add vertical spacing
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // TODO: Add functionality to upload X-Ray
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Upload X-Ray clicked')),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[700],
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16), // Added padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // Rounded corners
+                      ),
                     ),
-                  ),
-                  icon: const Icon(Icons.upload_rounded, color: Colors.white),
-                  label: Text(
-                    'Upload X-Ray',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    icon: const Icon(Icons.upload_rounded, color: Colors.white),
+                    label: Text(
+                      'Upload X-Ray',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 16),
-
                 // View Previous Reports Button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO: Add functionality to view reports
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('View Previous Reports clicked')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[500],
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8.0), // Add vertical spacing
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // TODO: Add functionality to view reports
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('View Previous Reports clicked')),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[500],
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16), // Added padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // Rounded corners
+                      ),
                     ),
-                  ),
-                  icon: const Icon(Icons.history, color: Colors.white),
-                  label: Text(
-                    'View Previous Reports',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    icon: const Icon(Icons.history, color: Colors.white),
+                    label: Text(
+                      'View Previous Reports',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
