@@ -55,7 +55,7 @@ class AccountPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          'Mehdi Rtel',
+                          'curaV acount test',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
