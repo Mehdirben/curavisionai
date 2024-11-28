@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MedicationPage extends StatelessWidget {
-  const MedicationPage({super.key});
+class MedicationReminderPage extends StatelessWidget {
+  const MedicationReminderPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class MedicationPage extends StatelessWidget {
           color: Colors.white, // Back button color (white)
         ),
         title: Text(
-          'Medication Checker',
+          'Medication Reminder',
           style: GoogleFonts.montserrat(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -20,7 +20,7 @@ class MedicationPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.green[800], // Green theme for Medication Checker
+        backgroundColor: Colors.purple[800], // Purple theme for Medication Reminder
       ),
       body: Column(
         children: [
@@ -34,9 +34,9 @@ class MedicationPage extends StatelessWidget {
                   children: [
                     // Icon representing the feature
                     Icon(
-                      Icons.medication, // Medication icon
+                      Icons.alarm, // Alarm icon
                       size: 100,
-                      color: Colors.green[800],
+                      color: Colors.purple[800],
                     ),
                     const SizedBox(height: 24), // Spacing between icon and text
                     // "Coming Soon" Title
@@ -45,14 +45,14 @@ class MedicationPage extends StatelessWidget {
                       style: GoogleFonts.lato(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green[800],
+                        color: Colors.purple[800],
                       ),
                     ),
                     const SizedBox(height: 16), // Spacing between title and description
                     // Description Text
                     Text(
-                      'The Medication Checker feature is under development. '
-                          'Soon, you’ll be able to analyze your medication interactions and find safer alternatives.',
+                      'The Medication Reminder feature is under development. '
+                          'Soon, you’ll be able to set reminders to stay on top of your medication schedule.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.lato(
                         fontSize: 16,
@@ -66,7 +66,7 @@ class MedicationPage extends StatelessWidget {
                         Navigator.pop(context); // Navigate back to the previous page
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[800], // Button color
+                        backgroundColor: Colors.purple[800], // Button color
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8), // Rounded corners

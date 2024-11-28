@@ -37,55 +37,77 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Forgot Password')),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Reset Your Password',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+      appBar: AppBar(
+        title: const Text('Forgot Password'), // Consistent blue with the app design
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Reset Your Password',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Enter your email to receive a password reset link',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: _resetPassword,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue[800],
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(180, 50),
+                      ),
+                      child: const Text('Send Reset Link'),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Enter your email to receive a password reset link',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _resetPassword,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue[800],
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  minimumSize: const Size(180, 50),
-                ),
-                child: const Text('Send Reset Link'),
-              ),
-            ],
+            ),
           ),
-        ),
+
+          // Footer Section
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'CuraVision AI - Empowering Your Health',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey[600],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }
