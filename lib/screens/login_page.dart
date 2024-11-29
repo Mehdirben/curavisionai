@@ -13,26 +13,40 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false; // Track loading state
 
+  // Login function
   void _login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true; // Show loading indicator
+      });
+
       try {
         // Attempt login using AuthService
         bool success = await AuthService.login(
-            _emailController.text,
-            _passwordController.text
+          _emailController.text,
+          _passwordController.text,
         );
+
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
 
         if (success) {
           // Navigate to home page if login successful
           Navigator.pushReplacementNamed(context, '/home');
         } else {
-          // Show error message
+          // Show error message if login fails
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login Failed')),
+            const SnackBar(content: Text('Invalid email or password')),
           );
         }
       } catch (e) {
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${e.toString()}')),
         );
@@ -86,6 +100,10 @@ class _LoginPageState extends State<LoginPage> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your email';
                             }
+                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid email address';
+                            }
                             return null;
                           },
                         ),
@@ -100,9 +118,9 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -136,8 +154,10 @@ class _LoginPageState extends State<LoginPage> {
 
                         const SizedBox(height: 20),
 
-                        // Login Button
-                        SizedBox(
+                        // Login Button or Loading Indicator
+                        _isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: _login,

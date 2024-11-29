@@ -14,7 +14,9 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _isLoading = false; // Track loading state
 
+  // Sign-up function
   void _signup() async {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text != _confirmPasswordController.text) {
@@ -24,6 +26,10 @@ class _SignUpPageState extends State<SignUpPage> {
         return;
       }
 
+      setState(() {
+        _isLoading = true; // Show loading indicator
+      });
+
       try {
         bool success = await AuthService.signup(
           _nameController.text,
@@ -31,16 +37,22 @@ class _SignUpPageState extends State<SignUpPage> {
           _passwordController.text,
         );
 
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
+
         if (success) {
+          // Navigate to home page on successful sign-up
           Navigator.pushReplacementNamed(context, '/home');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign Up Failed')),
-          );
         }
       } catch (e) {
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
+
+        // Display error message from Firebase
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
+          SnackBar(content: Text(e.toString())),
         );
       }
     }
@@ -50,7 +62,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'), // Consistent blue theme
+        title: const Text('Sign Up'),
       ),
       body: Column(
         children: [
@@ -90,6 +102,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
                         return null;
                       },
                     ),
@@ -107,6 +123,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters long';
                         }
                         return null;
                       },
@@ -131,8 +150,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     const SizedBox(height: 30),
 
-                    // Sign Up Button
-                    ElevatedButton(
+                    // Sign Up Button or Loading Indicator
+                    _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
                       onPressed: _signup,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
