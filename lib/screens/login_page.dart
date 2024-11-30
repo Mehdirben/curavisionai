@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false;
   bool _isLoading = false; // Track loading state
 
-  // Login function
+  /// Login function
   void _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -24,31 +24,31 @@ class _LoginPageState extends State<LoginPage> {
 
       try {
         // Attempt login using AuthService
-        bool success = await AuthService.login(
-          _emailController.text,
-          _passwordController.text,
+        await AuthService.login(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
         );
 
         setState(() {
           _isLoading = false; // Hide loading indicator
         });
 
-        if (success) {
-          // Navigate to home page if login successful
-          Navigator.pushReplacementNamed(context, '/home');
-        } else {
-          // Show error message if login fails
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Invalid email or password')),
-          );
-        }
+        // Navigate to home page if login is successful
+        Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         setState(() {
           _isLoading = false; // Hide loading indicator
         });
 
+        // Show a SnackBar with the error message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
+          SnackBar(
+            content: Text(
+              e.toString().replaceFirst('Exception: ', ''), // Remove "Exception:" prefix
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red, // Red background for errors
+          ),
         );
       }
     }
@@ -98,11 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return 'Please enter your email address.';
                             }
                             if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                 .hasMatch(value)) {
-                              return 'Please enter a valid email address';
+                              return 'Please enter a valid email address.';
                             }
                             return null;
                           },
@@ -132,7 +132,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                              return 'Please enter your password.';
+                            }
+                            if (value.length < 6) {
+                              return 'Password must be at least 6 characters long.';
                             }
                             return null;
                           },

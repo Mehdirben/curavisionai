@@ -16,7 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmPasswordController = TextEditingController();
   bool _isLoading = false; // Track loading state
 
-  // Sign-up function
+  /// Sign-up function
   void _signup() async {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text != _confirmPasswordController.text) {
@@ -32,9 +32,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
       try {
         bool success = await AuthService.signup(
-          _nameController.text,
-          _emailController.text,
-          _passwordController.text,
+          _nameController.text.trim(),
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
         );
 
         setState(() {
@@ -50,9 +50,14 @@ class _SignUpPageState extends State<SignUpPage> {
           _isLoading = false; // Hide loading indicator
         });
 
-        // Display error message from Firebase
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
+          SnackBar(
+            content: Text(
+              e.toString().replaceFirst('Exception: ', ''), // Remove "Exception:" prefix
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red, // Red background for errors
+          ),
         );
       }
     }
