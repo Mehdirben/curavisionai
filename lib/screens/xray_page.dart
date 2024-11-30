@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'ViewReportsPage.dart';
+import 'viewreportspage.dart';
 
 class XRayPage extends StatelessWidget {
   const XRayPage({super.key});
