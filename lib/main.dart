@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; // Generated Firebase configuration
-import 'screens/login_page.dart'; // Login page
-import 'screens/home_page.dart'; // Home page after successful login
-import 'screens/signup_page.dart'; // Sign-up page for new users
-import 'screens/forgot_password_page.dart'; // Forgot password page
+import 'firebase_options.dart';
+import 'screens/login_page.dart';
+import 'screens/home_page.dart';
+import 'screens/signup_page.dart';
+import 'screens/forgot_password_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  try {
-    // Initialize Firebase with platform-specific configurations
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    print("Firebase successfully initialized.");
-  } catch (e) {
-    print("Error initializing Firebase: $e");
-  }
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -34,7 +26,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/login', // Default route
+      initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
