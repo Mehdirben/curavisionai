@@ -11,22 +11,37 @@ class ForgotPasswordPage extends StatefulWidget {
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false; // Track loading state
 
   void _resetPassword() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true; // Show loading indicator
+      });
+
       try {
         bool success = await AuthService.resetPassword(_emailController.text);
+
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
 
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Password reset link sent to your email')),
           );
+          // Optionally navigate back to the login page
+          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to send reset link')),
           );
         }
       } catch (e) {
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${e.toString()}')),
         );
@@ -74,11 +89,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
                         return null;
                       },
                     ),
                     const SizedBox(height: 30),
-                    ElevatedButton(
+
+                    // Show loading or reset button
+                    _isLoading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
                       onPressed: _resetPassword,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
