@@ -20,7 +20,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       });
 
       try {
-        bool success = await AuthService.resetPassword(_emailController.text);
+        bool success = await AuthService.resetPassword(_emailController.text.trim());
 
         setState(() {
           _isLoading = false; // Hide loading indicator
@@ -30,12 +30,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Password reset link sent to your email')),
           );
-          // Optionally navigate back to the login page
-          Navigator.pop(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to send reset link')),
-          );
+          Navigator.pop(context); // Return to the login page
         }
       } catch (e) {
         setState(() {
@@ -43,7 +38,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
+          SnackBar(
+            content: Text(
+              e.toString().replaceFirst('Exception: ', ''), // Remove "Exception:" prefix
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red, // Red background for errors
+          ),
         );
       }
     }
@@ -53,7 +54,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot Password'), // Consistent blue with the app design
+        title: const Text('Forgot Password'),
       ),
       body: Column(
         children: [
