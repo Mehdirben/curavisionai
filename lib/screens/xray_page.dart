@@ -13,7 +13,8 @@ class XRayPage extends StatefulWidget {
 
 class _XRayPageState extends State<XRayPage> {
   File? _image; // Selected image file
-  String? _result; // Analysis result to display
+  String? _englishResult; // Analysis result in English
+  String? _darijaResult; // Translated result in Darija
   bool _isLoading = false; // Loading state
 
   final ImagePicker _picker = ImagePicker(); // Instance of ImagePicker
@@ -25,7 +26,8 @@ class _XRayPageState extends State<XRayPage> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path); // Store the selected image
-        _result = null; // Reset previous result
+        _englishResult = null; // Reset previous English result
+        _darijaResult = null; // Reset previous Darija result
       });
       _analyzeImage(); // Automatically analyze the image after selection
     }
@@ -37,23 +39,30 @@ class _XRayPageState extends State<XRayPage> {
 
     setState(() {
       _isLoading = true; // Show loading spinner
-      _result = null; // Clear previous result
+      _englishResult = null; // Clear previous English result
+      _darijaResult = null; // Clear previous Darija result
     });
 
     try {
-      // Call Hugging Face API for X-ray analysis
+      // Step 1: Call Hugging Face API for X-ray analysis
       final analysisResult = await huggingFaceService.analyzeXRay(_image!);
 
-      // Generate the description using the Mixtral model
+      // Step 2: Generate the description using the Mixtral model
       print("Calling Mixtral model for detailed explanation...");
-      final description = await huggingFaceService.generateDescriptionUsingModel(analysisResult);
+      final englishDescription = await huggingFaceService.generateDescriptionUsingModel(analysisResult);
+
+      // Step 3: Translate the English description to Darija
+      print("Translating the result to Darija...");
+      final darijaTranslation = await huggingFaceService.translateToDarija(englishDescription);
 
       setState(() {
-        _result = description; // Display the result
+        _englishResult = englishDescription; // Display the English result
+        _darijaResult = darijaTranslation; // Display the Darija translation
       });
     } catch (e) {
       setState(() {
-        _result = "Error: $e"; // Show error message
+        _englishResult = "Error: $e"; // Show error message
+        _darijaResult = null; // Clear the Darija result in case of error
       });
     } finally {
       setState(() {
@@ -169,11 +178,11 @@ class _XRayPageState extends State<XRayPage> {
                       ),
                     ),
 
-                  // Loading Spinner or Result Section
+                  // Loading Spinner or Results Section
                   if (_isLoading) ...[
                     const SizedBox(height: 16),
                     const Center(child: CircularProgressIndicator()), // Show spinner while analyzing
-                  ] else if (_result != null) ...[
+                  ] else if (_englishResult != null) ...[
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -184,14 +193,30 @@ class _XRayPageState extends State<XRayPage> {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.blue[300]!), // Border for the result container
                         ),
-                        child: Text(
-                          "Analysis Result:\n\n$_result", // Display formatted result
-                          style: GoogleFonts.lato(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.blue[700],
-                          ),
-                          textAlign: TextAlign.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              "Analysis Result (English):\n\n$_englishResult", // Display English result
+                              style: GoogleFonts.lato(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue[700],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            if (_darijaResult != null)
+                              Text(
+                                "Analysis Result (Darija):\n\n$_darijaResult", // Display Darija translation
+                                style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blue[700],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                          ],
                         ),
                       ),
                     ),
