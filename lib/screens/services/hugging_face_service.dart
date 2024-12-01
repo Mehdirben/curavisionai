@@ -4,18 +4,19 @@ import 'package:http/http.dart' as http;
 
 class HuggingFaceService {
   final String apiKey = "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"; // Hugging Face API key
-  final String modelId = "lxyuan/vit-xray-pneumonia-classification"; // Hugging Face model ID
+  final String xrayModelId = "lxyuan/vit-xray-pneumonia-classification"; // X-Ray model ID
+  final String mixtralModelId = "mistralai/Mixtral-8x7B-Instruct-v0.1"; // Text generation model ID
 
   /// Analyze an X-ray image using the Hugging Face Inference API
   Future<List<dynamic>> analyzeXRay(File imageFile) async {
-    final url = Uri.parse("https://api-inference.huggingface.co/models/$modelId");
+    final url = Uri.parse("https://api-inference.huggingface.co/models/$xrayModelId");
     final headers = {
       "Authorization": "Bearer $apiKey", // Authorization header with API key
       "Content-Type": "application/octet-stream", // Send raw binary data
     };
 
     try {
-      print("Image Path: ${imageFile.path}"); // Debugging: print file path
+      print("Analyzing X-Ray with model: $xrayModelId");
 
       // Read the file as bytes
       final imageBytes = await imageFile.readAsBytes();
@@ -27,25 +28,77 @@ class HuggingFaceService {
         body: imageBytes,
       );
 
-      print("HTTP Status Code: ${response.statusCode}"); // Debugging: print status code
-      print("Response Data: ${response.body}"); // Debugging: print raw response
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as List<dynamic>; // Parse the JSON response as a list
-        print("Parsed Data: $data"); // Debugging: print parsed data
         return data; // Return the list of predictions
       } else {
-        print("Error Response: ${response.reasonPhrase}"); // Debugging: print error
-        if (response.statusCode == 400) {
-          throw Exception("Invalid input. Please ensure the image is in a supported format.");
-        } else if (response.statusCode == 500) {
-          throw Exception("Server error. Please try again later.");
-        }
-        throw Exception("Unexpected error: ${response.reasonPhrase}");
+        throw Exception("X-Ray model error: ${response.reasonPhrase}");
       }
     } catch (e) {
-      print("Exception: Failed to analyze X-ray - $e"); // Debugging: print exception
       throw Exception("Failed to analyze X-ray: $e");
+    }
+  }
+
+  /// Generate a description using the Mixtral model based on the X-ray analysis percentage
+  Future<String> generateDescriptionUsingModel(List<dynamic> predictions) async {
+    if (predictions.isEmpty) {
+      return "No significant results were found. Please try again with a different X-Ray image.";
+    }
+
+    final prediction = predictions[0]; // Use the top prediction result
+    final label = prediction['label'];
+    final score = (prediction['score'] * 100).toDouble(); // Convert to percentage
+
+    final url = Uri.parse("https://api-inference.huggingface.co/models/$mixtralModelId");
+    final headers = {
+      "Authorization": "Bearer $apiKey", // Authorization header with API key
+      "Content-Type": "application/json", // Send JSON data
+    };
+
+    // Construct the prompt for the Mixtral model
+    final prompt = label.toLowerCase() == "pneumonia"
+        ? "The X-ray analysis indicates a $score% likelihood of pneumonia. Provide a detailed explanation of this finding, describe what pneumonia is, and recommend whether the patient should consult a doctor based on this likelihood."
+        : "The X-ray analysis indicates a $score% likelihood of $label. Provide a detailed explanation of this finding, describe what this condition is, and recommend whether the patient should consult a doctor based on this likelihood.";
+
+    final body = jsonEncode({
+      "inputs": prompt,
+      "parameters": {
+        "temperature": 0.7, // Control randomness of the response
+        "max_new_tokens": 1024, // Allow generation of up to 1024 tokens
+        "repetition_penalty": 1.1, // Penalize repetitive text
+      },
+    });
+
+    try {
+      print("Sending request to Mixtral model...");
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+
+      print("Mixtral API Response Status: ${response.statusCode}");
+      print("Mixtral API Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List<dynamic>;
+        if (data.isNotEmpty && data[0]["generated_text"] != null) {
+          String generatedText = data[0]["generated_text"].trim();
+
+          // Ensure prompt is excluded from the result
+          if (generatedText.contains(prompt)) {
+            generatedText = generatedText.replaceFirst(prompt, "").trim();
+          }
+
+          return generatedText;
+        } else {
+          throw Exception("Unexpected response format from Mixtral model.");
+        }
+      } else {
+        throw Exception("Mixtral model error: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      return "Unable to generate a detailed description at this time.";
     }
   }
 }
