@@ -57,22 +57,28 @@ class HuggingFaceService {
 
     // Construct the prompt for the Mixtral model
     final prompt = label.toLowerCase() == "pneumonia"
-        ? "An X-ray analysis indicates a $score% likelihood of pneumonia. Briefly explain what pneumonia is and recommend whether the patient should consult a doctor based on this likelihood."
-        : "An X-ray analysis indicates a $score% likelihood of $label. Briefly explain what this condition is and recommend whether the patient should consult a doctor based on this likelihood.";
+        ? "The X-ray analysis indicates a $score% likelihood of pneumonia. Provide a detailed explanation of this finding, describe what pneumonia is, and recommend whether the patient should consult a doctor based on this likelihood."
+        : "The X-ray analysis indicates a $score% likelihood of $label. Provide a detailed explanation of this finding, describe what this condition is, and recommend whether the patient should consult a doctor based on this likelihood.";
 
     final body = jsonEncode({
       "inputs": prompt,
-      "parameters": { // Limit the response length
-        "temperature": 0.7, // Control randomness
+      "parameters": {
+        "temperature": 0.7, // Control randomness of the response
+        "max_new_tokens": 1024, // Allow generation of up to 1024 tokens
+        "repetition_penalty": 1.1, // Penalize repetitive text
       },
     });
 
     try {
+      print("Sending request to Mixtral model...");
       final response = await http.post(
         url,
         headers: headers,
         body: body,
       );
+
+      print("Mixtral API Response Status: ${response.statusCode}");
+      print("Mixtral API Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as List<dynamic>;
