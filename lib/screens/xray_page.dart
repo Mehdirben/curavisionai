@@ -41,10 +41,15 @@ class _XRayPageState extends State<XRayPage> {
     });
 
     try {
-      // Call Hugging Face API
+      // Call Hugging Face API for X-ray analysis
       final analysisResult = await huggingFaceService.analyzeXRay(_image!);
+
+      // Generate the description using the Mixtral model
+      print("Calling Mixtral model for detailed explanation...");
+      final description = await huggingFaceService.generateDescriptionUsingModel(analysisResult);
+
       setState(() {
-        _result = _formatPredictions(analysisResult); // Format and display the result
+        _result = description; // Display the result
       });
     } catch (e) {
       setState(() {
@@ -55,15 +60,6 @@ class _XRayPageState extends State<XRayPage> {
         _isLoading = false; // Hide loading spinner
       });
     }
-  }
-
-  /// Format predictions into a readable string
-  String _formatPredictions(List<dynamic> predictions) {
-    return predictions.map((prediction) {
-      final label = prediction['label'];
-      final score = (prediction['score'] * 100).toStringAsFixed(2); // Convert score to percentage
-      return "$label: $score%";
-    }).join("\n"); // Join each prediction in a new line
   }
 
   @override
@@ -87,11 +83,9 @@ class _XRayPageState extends State<XRayPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Scrollable Content
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Header Section
                   Container(
