@@ -86,6 +86,7 @@ class _XRayPageState extends State<XRayPage> {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Header Section
                   Container(
