@@ -1,11 +1,12 @@
-# CuraVision AI - Digital Healthcare Assistant
+# CuraVision AI - Empowering Your Health
 
 ## Overview
 
-CuraVision AI is a Flutter-based mobile application designed to empower patients with AI-powered healthcare tools. It provides two primary services:
+CuraVision AI is a Flutter-based mobile application designed to empower patients with AI-powered healthcare tools. It provides three primary services:
 
 1. **X-Ray Analysis:** AI-driven diagnostics for skeletal anomalies, malformations, and posture issues.
-2. **Medication Composition and Interaction Checker:** A personalized tool to analyze medication ingredients, suggest alternatives, and verify the compatibility of multiple medications.
+2. **Medication Composition and Interaction Checker:** A personalized tool to analyze medication ingredients, suggest alternatives and verify the compatibility of multiple medications.
+3. **Medication Reminder:** Users can set daily reminders to ensure timely medication intake and medical appointments.
 
 ## Features
 
@@ -18,6 +19,9 @@ CuraVision AI is a Flutter-based mobile application designed to empower patients
     * Analyze medication ingredients and potential side effects.
     * Check for interactions between multiple medications.
     * Suggest alternative medications based on individual needs.
+* **Medication Reminder:**
+    * Pills reminder.
+    * Medical Appointment.
 * **User-Friendly Interface:**
     * Intuitive navigation and design for a smooth user experience.
     * Accessible on both Android and iOS platforms.
@@ -29,16 +33,15 @@ CuraVision AI is a Flutter-based mobile application designed to empower patients
 * **Flutter:** Cross-platform mobile development framework.
 * **Dart:** Programming language for Flutter.
 * **Firebase:** Backend services for authentication and data storage.
-* **AI/ML Models:**
+* **AI Models:** Vision modal, Llm agent and T2TT darija modal
 
 ## Usage
 
-1. **Login/Register:** Create an account or log in with existing credentials.
-2. **Navigate:** Use the bottom navigation bar to access different features:
-    * **Home:** Welcome screen with platform information.
-    * **X-Ray:** Upload and analyze X-ray images.
-    * **Medication:** Check medication composition and interactions.
-    * **Account:** Manage user profile and settings.
+1.  **Login/Register:** Create an account or log in with existing credentials.
+2.  **X-Ray Analysis:** Upload and analyze X-ray images.
+3.  **Medication Checker:** Check medication composition and interactions.
+4.  **Medication Reminder:** Ensure timely medication intake and medical appointments.
+5.  **Account:** Manage user profile and settings.
 
 ## Disclaimer
 
