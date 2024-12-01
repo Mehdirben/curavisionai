@@ -15,7 +15,8 @@ class _XRayPageState extends State<XRayPage> {
   File? _image; // Selected image file
   String? _englishResult; // Analysis result in English
   String? _darijaResult; // Translated result in Darija
-  bool _isLoading = false; // Loading state
+  bool _isLoading = false; // Loading state for initial analysis
+  bool _isTranslating = false; // Loading state for Darija translation
 
   final ImagePicker _picker = ImagePicker(); // Instance of ImagePicker
   final HuggingFaceService huggingFaceService = HuggingFaceService(); // Instance of HuggingFaceService
@@ -28,6 +29,8 @@ class _XRayPageState extends State<XRayPage> {
         _image = File(pickedFile.path); // Store the selected image
         _englishResult = null; // Reset previous English result
         _darijaResult = null; // Reset previous Darija result
+        _isLoading = false; // Reset loading states
+        _isTranslating = false;
       });
       _analyzeImage(); // Automatically analyze the image after selection
     }
@@ -38,7 +41,7 @@ class _XRayPageState extends State<XRayPage> {
     if (_image == null) return;
 
     setState(() {
-      _isLoading = true; // Show loading spinner
+      _isLoading = true; // Show loading spinner for initial analysis
       _englishResult = null; // Clear previous English result
       _darijaResult = null; // Clear previous Darija result
     });
@@ -51,22 +54,27 @@ class _XRayPageState extends State<XRayPage> {
       print("Calling Mixtral model for detailed explanation...");
       final englishDescription = await huggingFaceService.generateDescriptionUsingModel(analysisResult);
 
+      // Immediately show the English result
+      setState(() {
+        _englishResult = englishDescription; // Display the English result
+        _isLoading = false; // Stop loading spinner for English result
+        _isTranslating = true; // Start spinner for Darija translation
+      });
+
       // Step 3: Translate the English description to Darija
       print("Translating the result to Darija...");
       final darijaTranslation = await huggingFaceService.translateToDarija(englishDescription);
 
       setState(() {
-        _englishResult = englishDescription; // Display the English result
         _darijaResult = darijaTranslation; // Display the Darija translation
+        _isTranslating = false; // Stop spinner for Darija translation
       });
     } catch (e) {
       setState(() {
         _englishResult = "Error: $e"; // Show error message
         _darijaResult = null; // Clear the Darija result in case of error
-      });
-    } finally {
-      setState(() {
-        _isLoading = false; // Hide loading spinner
+        _isLoading = false; // Stop all spinners
+        _isTranslating = false;
       });
     }
   }
@@ -196,8 +204,9 @@ class _XRayPageState extends State<XRayPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // English Result
                             Text(
-                              "Analysis Result (English):\n\n$_englishResult", // Display English result
+                              "Analysis Result (English):\n\n$_englishResult",
                               style: GoogleFonts.lato(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -206,16 +215,33 @@ class _XRayPageState extends State<XRayPage> {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 16),
-                            if (_darijaResult != null)
-                              Text(
-                                "Analysis Result (Darija):\n\n$_darijaResult", // Display Darija translation
-                                style: GoogleFonts.lato(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blue[700],
+                            // Darija Result
+                            Column(
+                              children: [
+                                Text(
+                                  "Analysis Result (Darija):",
+                                  style: GoogleFonts.lato(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue[700],
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
+                                const SizedBox(height: 8),
+                                if (_isTranslating)
+                                  const Center(child: CircularProgressIndicator()), // Show spinner for Darija translation
+                                if (_darijaResult != null)
+                                  Text(
+                                    _darijaResult!,
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.blue[700],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
